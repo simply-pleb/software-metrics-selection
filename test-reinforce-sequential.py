@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 
 import torch
 
+
 from src.envs import (
     RLFSEnvDeltaBackward,
     RLFSEnvDeltaForward,
@@ -15,8 +16,8 @@ from src.errors import sammon_error
 
 
 def get_data_frames():
-    data_train = pd.read_csv("data/data_train.csv", sep=",")
-    data_test = pd.read_csv("data/data_test.csv", sep=",")
+    data_train = pd.read_csv("data/data_class_train.csv", sep=",")
+    data_test = pd.read_csv("data/data_class_test.csv", sep=",")
 
     return data_train, data_test
 
@@ -42,11 +43,13 @@ if __name__ == "__main__":
     X_train, X_test = get_data_train_test(data_train, data_test)
     state_space = X_train.shape[1]
     action_space = X_train.shape[1]
+    
+    features_to_select = 10+1
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     agent = REINFORCE.REINFORCEAgent(state_space, action_space, gamma=1, lr=0.0001)
     if LOAD is None:
-        for i, num_features in enumerate(powers_of_two_less_than(state_space//2)):
+        for i, num_features in enumerate(powers_of_two_less_than(features_to_select)):
             env = RLFSEnvSparse(
                 state_size=state_space, data=X_train, max_features=num_features
             )
@@ -63,11 +66,11 @@ if __name__ == "__main__":
         agent.policy.load_state_dict(torch.load(LOAD + "policy_weights.pth"))
 
     INF_LOOP_CNT = 5
-    env = RLFSEnvSparse(state_size=state_space, data=X_test, max_features=state_space)
+    env = RLFSEnvSparse(state_size=state_space, data=X_test, max_features=features_to_select)
     errors = []
     num_ftrs = []
     print("waiting...")
-    for n in range(state_space):
+    for n in range(features_to_select):
         state = env.reset()
         # errors.append(sammon_error(X_test, state))
         state_cnt = 0  # int(np.sum(state))
@@ -107,7 +110,7 @@ if __name__ == "__main__":
     plt.ylabel("Sammon Error")
     plt.title("Sammon Error vs Number of Features")
     plt.grid(True)
-    plt.xticks(
-        np.arange(min(num_ftrs), max(num_ftrs) + 1, 5)
+    plt.xticks(num_ftrs
+        # np.arange(min(num_ftrs), max(num_ftrs) + 1, 5)
     )  # Set tick frequency to every 5 units
     plt.show()
