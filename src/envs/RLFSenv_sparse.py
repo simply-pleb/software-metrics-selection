@@ -26,7 +26,8 @@ class RLFSEnvSparse:
 
     def get_reward(self):
         if self.get_done():
-            r = self.init_error - self.error_f(self.data, self.state)
+            # r = self.init_error - self.error_f(self.data, self.state)
+            r = - np.log(self.error_f(self.data, self.state) + 1e-5)
             return r
         return 0.0
 
