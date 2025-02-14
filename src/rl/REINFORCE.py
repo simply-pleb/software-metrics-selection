@@ -96,7 +96,7 @@ class REINFORCEAgent:
         self.optimizer.step()
 
         # Step the learning rate scheduler
-        self.scheduler.step()
+        # self.scheduler.step()
 
         # Reset storage for the next episode
         self.log_probs = []
