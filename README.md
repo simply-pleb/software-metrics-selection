@@ -26,7 +26,7 @@ Dataset from:
 
 The optimization criterion is minimization of Sammon Error, which is a metric for preserving the geometric structure of the data. Sammon Error is a distance-preserving transformation of the data, and is defined as:
 
-\[E = \frac{1}{\sum_{i<j}{d_{ij}^*}}\sum_{i<j} \frac{\left(d_{ij}^* - d_{ij}\right)^2}{d_{ij}^*}\]
+$$E = \frac{1}{\sum_{i<j}{d_{ij}^*}}\sum_{i<j} \frac{\left(d_{ij}^* - d_{ij}\right)^2}{d_{ij}^*}$$
 
 where $d_{ij}^*$ is the distance between the $i$-th and $j$-th data points in the original space, and $d_{ij}$ is the distance between the same points in the transformed space.
 
